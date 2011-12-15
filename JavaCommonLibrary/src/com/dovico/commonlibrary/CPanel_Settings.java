@@ -3,12 +3,21 @@ package com.dovico.commonlibrary;
 import java.awt.*;
 import javax.swing.*;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 
 public class CPanel_Settings extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private JTextField m_txtConsumerSecret = null;
 	private JTextField m_txtDataAccessToken = null;
+	
+	// Part of the validation does an 'Employee/Me' call to verify the tokens and since we're making the call, we might as well grab the data if the application
+	// wishes to make use of it.
+	private Long m_lEmployeeID = null;
+	private String m_sEmployeeFirstName = "";
+	private String m_sEmployeeLastName = "";
 	
 	
 	// Default constructor
@@ -44,11 +53,18 @@ public class CPanel_Settings extends JPanel {
 	
 	
 	// Helper that checks to see if all fields, on the Settings tab, have a value, etc
+	/// <history>
+    /// <modified author="C. Gerard Gallant" date="2011-12-15" reason="Added a call to the new queryEmployeeMeData function."/>
+    /// </history>
 	public boolean validateSettingsData() {		
 		// Make sure that each text box has a value provided
 		if(!validateTextBoxHasValue(m_txtConsumerSecret, "Please provide the Consumer Secret.")) { return false; }
 		if(!validateTextBoxHasValue(m_txtDataAccessToken, "Please provide the Data Access Token.")) { return false; }
 		
+		// At this point we know that the both tokens have been provided but we don't know if they're valid. Let's call the API for the Employee/Me data to test
+		// the tokens and at the same time grab the logged in user's ID and Name
+		if(!queryEmployeeMeData()) { return false; }
+				
 		// We made it to this point. All is OK.
 		return true;
 	}
@@ -74,15 +90,58 @@ public class CPanel_Settings extends JPanel {
 		return true;
 	}		
 	
+	
+	/// <summary>
+    /// Queries the API for 'Employee/Me' data to test that the tokens are valid and to get the basic information of the user who is logging in (employee id, first
+	/// name, and last name)
+    /// </summary>
+    /// <param name="" type="" ref="false" inout="N/A" description="N/A"/>
+    /// <returns>false if there was an issue, true otherwise.</returns>
+    /// <history>
+    /// <modified author="C. Gerard Gallant" date="2011-12-15" reason="Created"/>
+    /// </history>
+	private boolean queryEmployeeMeData() {
+		// Make the Employee/Me API call. If no data was returned then exit now (the Employee/Me call should always succeed regardless of user security settings which
+		// means either the token(s) provided is invalid or there was another issue like a network error)
+		//
+		// NOTE: If there was an error, the CRESTAPIHelper.makeAPIRequest method will display it to the user
+		APIRequestResult arResult = CRESTAPIHelper.makeAPIRequest(CRESTAPIHelper.buildURI("Employees/Me/", "", "1"), "GET", null, getConsumerSecret(), getDataAccessToken());
+		Document xdDoc = arResult.getResultDocument();
+		if(xdDoc == null) { return false; }
 		
-	// Called by the default constructor to have the values placed into the controls
-	public void setSettingsData(String sConsumerSecret, String sDataAccessToken) {
+		
+		// Grab the list of Employee nodes and from that list grab the first item (there should always be one node)
+		Element xeEmployee = (Element)xdDoc.getDocumentElement().getElementsByTagName("Employee").item(0);
+		
+		// Pull the Employee ID, First Name, and Last Name from the employee node
+		m_lEmployeeID = Long.valueOf(CXMLHelper.getChildNodeValue(xeEmployee, "ID"));
+		m_sEmployeeFirstName = CXMLHelper.getChildNodeValue(xeEmployee, "FirstName");
+		m_sEmployeeLastName = CXMLHelper.getChildNodeValue(xeEmployee, "LastName");
+
+
+		// We made it to this point, everything is ok
+		return true;
+	}	
+	
+	
+		
+	// Called to have the values placed into the controls and the member variables set properly
+	/// <history>
+    /// <modified author="C. Gerard Gallant" date="2011-12-15" reason="Added the parameters lEmployeeID, sEmployeeFirstName, and sEmployeeLastName"/>
+    /// </history>
+	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, Long lEmployeeID, String sEmployeeFirstName, String sEmployeeLastName) {
 		m_txtConsumerSecret.setText(sConsumerSecret);
 		m_txtDataAccessToken.setText(sDataAccessToken);
+		m_lEmployeeID = lEmployeeID; 
+		m_sEmployeeFirstName = sEmployeeFirstName;
+		m_sEmployeeLastName = sEmployeeLastName;
 	}
 
 	
 	// Methods returning the setting values (should only be called if the call to validateSettingsData returns 'true')
 	public String getConsumerSecret() { return m_txtConsumerSecret.getText(); }
 	public String getDataAccessToken() { return m_txtDataAccessToken.getText(); }
+	public Long getEmployeeID() { return m_lEmployeeID; }
+	public String getEmployeeFirstName() { return m_sEmployeeFirstName; }
+	public String getEmployeeLastName() { return m_sEmployeeLastName; }
 }
