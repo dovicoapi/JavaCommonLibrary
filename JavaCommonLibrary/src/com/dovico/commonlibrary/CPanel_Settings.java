@@ -3,8 +3,7 @@ package com.dovico.commonlibrary;
 import java.awt.*;
 import javax.swing.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import com.dovico.commonlibrary.data.CEmployee;
 
 
 public class CPanel_Settings extends JPanel {
@@ -18,6 +17,8 @@ public class CPanel_Settings extends JPanel {
 	private Long m_lEmployeeID = null;
 	private String m_sEmployeeFirstName = "";
 	private String m_sEmployeeLastName = "";
+	
+	private String m_sApiVersionTargeted = ""; 
 	
 	
 	// Default constructor
@@ -99,25 +100,21 @@ public class CPanel_Settings extends JPanel {
     /// <returns>false if there was an issue, true otherwise.</returns>
     /// <history>
     /// <modified author="C. Gerard Gallant" date="2011-12-15" reason="Created"/>
-    /// </history>
+    /// <modified author="C. Gerard Gallant" date="2012-03-30" reason="Reworked to use the new CEmployee class and logic"/>
+	/// </history>
 	private boolean queryEmployeeMeData() {
-		// Make the Employee/Me API call. If no data was returned then exit now (the Employee/Me call should always succeed regardless of user security settings which
-		// means either the token(s) provided is invalid or there was another issue like a network error)
-		//
-		// NOTE: If there was an error, the CRESTAPIHelper.makeAPIRequest method will display it to the user
-		APIRequestResult arResult = CRESTAPIHelper.makeAPIRequest(CRESTAPIHelper.buildURI("Employees/Me/", "", "1"), "GET", null, getConsumerSecret(), getDataAccessToken());
-		Document xdDoc = arResult.getResultDocument();
-		if(xdDoc == null) { return false; }
-		
-		
-		// Grab the list of Employee nodes and from that list grab the first item (there should always be one node)
-		Element xeEmployee = (Element)xdDoc.getDocumentElement().getElementsByTagName("Employee").item(0);
-		
-		// Pull the Employee ID, First Name, and Last Name from the employee node
-		m_lEmployeeID = Long.valueOf(CXMLHelper.getChildNodeValue(xeEmployee, "ID"));
-		m_sEmployeeFirstName = CXMLHelper.getChildNodeValue(xeEmployee, "FirstName");
-		m_sEmployeeLastName = CXMLHelper.getChildNodeValue(xeEmployee, "LastName");
+		// Request the Employee/Me record (info of the person logging in)
+		APIRequestResult aRequestResult = new APIRequestResult(getConsumerSecret(), getDataAccessToken(), m_sApiVersionTargeted, true);
+		CEmployee eEmployee = CEmployee.getInfoMe(aRequestResult);
 
+		// If the employee object is null there was a problem so exit now
+		if(eEmployee == null) { return false; }
+		
+	
+		// Pull the Employee ID, First Name, and Last Name from the employee node
+		m_lEmployeeID = eEmployee.getID();
+		m_sEmployeeFirstName = eEmployee.getFirstName();
+		m_sEmployeeLastName = eEmployee.getLastName();
 
 		// We made it to this point, everything is ok
 		return true;
@@ -128,10 +125,13 @@ public class CPanel_Settings extends JPanel {
 	// Called to have the values placed into the controls and the member variables set properly
 	/// <history>
     /// <modified author="C. Gerard Gallant" date="2011-12-15" reason="Added the parameters lEmployeeID, sEmployeeFirstName, and sEmployeeLastName"/>
+    /// <modified author="C. Gerard Gallant" date="2012-03-30" reason="Modified to accept the sApiVersionTargeted parameter"/>
     /// </history>
-	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, Long lEmployeeID, String sEmployeeFirstName, String sEmployeeLastName) {
+	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, String sApiVersionTargeted, Long lEmployeeID, String sEmployeeFirstName, 
+			String sEmployeeLastName) {
 		m_txtConsumerSecret.setText(sConsumerSecret);
 		m_txtDataAccessToken.setText(sDataAccessToken);
+		m_sApiVersionTargeted = sApiVersionTargeted;
 		m_lEmployeeID = lEmployeeID; 
 		m_sEmployeeFirstName = sEmployeeFirstName;
 		m_sEmployeeLastName = sEmployeeLastName;
