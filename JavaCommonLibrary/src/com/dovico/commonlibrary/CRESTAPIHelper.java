@@ -38,14 +38,15 @@ public class CRESTAPIHelper {
 	// Returns the result of a call (REST API v2 is currently XML-based so an XML Document object is returned by this function) 
 	/// <history>
     /// <modified author="C. Gerard Gallant" date="2012-03-30" reason="Modified to call the newly overloaded version of this function (left this one so that I don't break existing code implementations)"/>
-    /// </history>
+	/// <modified author="C. Gerard Gallant" date="2012-03-30" reason="Was checking for null on the wrong parameter. Fixed the code."/>
+	/// </history>
 	public static APIRequestResult makeAPIRequest(String sURI, String sHttpMethod, String sPostPutXMLData, String sConsumerSecret, String sDataAccessToken) {
 		// Create our Request/Result object (3rd param is specified as an empty string since the URI has already been generated...version # is only needed when 
 		// building up the URI. 4th param indicates that the function is to show any error that happens to the user) 
 		APIRequestResult aRequestResult = new APIRequestResult(sConsumerSecret, sDataAccessToken, "", true);
 		aRequestResult.setRequestURI(sURI);
-		aRequestResult.setRequestHttpMethod((sHttpMethod == null ? "" : sHttpMethod));
-		aRequestResult.setRequestPostPutXmlData(sPostPutXMLData);
+		aRequestResult.setRequestHttpMethod(sHttpMethod);
+		aRequestResult.setRequestPostPutXmlData((sPostPutXMLData == null ? "" : sPostPutXMLData));
 		
 		// Call the overloaded method to handle the work and then return the result object to the caller 
 		makeAPIRequest(aRequestResult);
