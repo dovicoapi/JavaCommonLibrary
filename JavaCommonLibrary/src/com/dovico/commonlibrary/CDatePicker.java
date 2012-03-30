@@ -1,7 +1,6 @@
 package com.dovico.commonlibrary;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -53,10 +52,8 @@ public class CDatePicker {
 		// The Month row (previous month button, label of current month/year, next month button) 
 		JPanel pMonthRow = new JPanel(new BorderLayout(0, 0));
 		pMonthRow.setBorder(new EmptyBorder(2, 2, 2, 2)); // A bit of a border so the controls on this row have a bit of a margin
-		pMonthRow.setBackground(new Color(220, 220, 220));
 
 		JButton cmdPreviousMonth = new JButton("<");
-		cmdPreviousMonth.setBackground(new Color(220, 220, 220));
 		cmdPreviousMonth.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent ae) { onClick_cmdPreviousMonth(); }
 		});
@@ -67,7 +64,6 @@ public class CDatePicker {
 		pMonthRow.add(m_lblMonthYear, BorderLayout.CENTER);
 		
 		JButton cmdNextMonth = new JButton(">");
-		cmdNextMonth.setBackground(new Color(220, 220, 220));
 		cmdNextMonth.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) { onClick_cmdNextMonth(); }
         });
