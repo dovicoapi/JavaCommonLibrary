@@ -34,4 +34,20 @@ public class CXMLHelper {
 		// Either the tag wasn't found OR there was no value provided. Return the default value to the caller instead
 		return sDefaultValue;
 	}
+	
+	
+	// The following is only public temporarily until I can come up with an XML String Builder class
+	//
+	/// <history>
+    /// <modified author="C. Gerard Gallant" date="2012-03-28" reason="Created to help fix XML strings that are included as part of a larger XML string"/>
+	/// <modified author="C. Gerard Gallant" date="2012-04-11" reason="Moved here from the Import/Export tool's code base"/>
+	/// </history>
+	public static String fixXmlString(String sValue) {
+		// Change all unsafe XML characters into their safe ones
+		String sReturnVal = sValue.replace("&", "&amp;");
+		sReturnVal = sReturnVal.replace("'", "&apos;");
+		sReturnVal = sReturnVal.replace("\"", "&quot;");
+		sReturnVal = sReturnVal.replace("<", "&lt;");
+		return sReturnVal.replace(">", "&gt;");
+	}
 }

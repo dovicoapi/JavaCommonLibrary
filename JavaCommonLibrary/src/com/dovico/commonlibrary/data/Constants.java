@@ -10,4 +10,11 @@ public class Constants {
 	
 	
 	public static Long NONE_ID = 0L;
+	
+	// The available Prefix values for the AssignmentID 
+	public static String ASSIGNMENT_TYPE_CLIENT = "C";
+	public static String ASSIGNMENT_TYPE_PROJECT = "P";
+	public static String ASSIGNMENT_TYPE_TASKGROUP = "G";
+	public static String ASSIGNMENT_TYPE_TASK = "T";
+	public static String ASSIGNMENT_TYPE_EMPLOYEE = "E";
 }

@@ -21,21 +21,27 @@ import javax.swing.border.EmptyBorder;
 //
 // Future item: Have some way to jump to a Month or Year (drop-downs perhaps). For now, we only have the Previous/Next buttons to cycle through the months
 public class CDatePicker {
-	JDialog m_dlgSelf = null;	
-	JLabel m_lblMonthYear = null;
-	JButton[] m_arrMonthDayButtons = new JButton[42];
+	private JDialog m_dlgSelf = null;	
+	private JLabel m_lblMonthYear = null;
+	private JButton[] m_arrMonthDayButtons = new JButton[42];
 	
-	int m_iMonth = 0, m_iYear = 0; // Passed in via the constructor
-	String m_sSelectedDay = "";
+	private Calendar m_calDate = null;
+	private String m_sSelectedDay = "";
+	private ActionListener m_alListener = null;
 	
 	
-	// The constructor simply lays out the controls (NOTE: iMonth needs to be zero-based. e.g. January is 0 rather than 1)
-	public CDatePicker(Component parent, String sTitle, int iMonth, int iYear){
-		// Remember the Month and Year values passed in
-		m_iMonth = iMonth;
-		m_iYear = iYear;		
+	// The constructor simply lays out the controls
+	// NOTE: alListener will be told of the date selection. It is not required and can be set to null if you don't want to pass in a listener
+	// NOTE: You can call setDate before showing this control. If you do that, you can set dtDate to null here. If you pass null here and do not call setDate, the
+	// 		 current date is used when you call setVisible(true).
+	public CDatePicker(Component cParent, ActionListener alListener, String sTitle, Date dtDate){
+		// Remember the listener and date (if the date is null, it's ignored by the setDate function)
+		m_alListener = alListener;
+		this.setDate(dtDate);
+		
 			
-		int iWidth= 330;
+		// Put the width in a variable because it's needed by m_dlgSelf and pMonthDaysRow
+		int iWidth = 330;
 		
 		// Create our date picker window, give it the specified title and indicate that it is to be a modal window
 		m_dlgSelf = new JDialog();
@@ -109,18 +115,52 @@ public class CDatePicker {
 		pContent.add(pMonthDaysRow, BorderLayout.SOUTH);
 		m_dlgSelf.add(pContent, BorderLayout.CENTER);
 	
-		// Adjust where this dialog is displayed, adjust the date controls according to the specified date, and then show this dialog
-        m_dlgSelf.setLocationRelativeTo(parent);
-		displayDate();
-		m_dlgSelf.setVisible(true);
+		// Adjust where this dialog is displayed
+        m_dlgSelf.setLocationRelativeTo(cParent);
+	}
+		
+	
+	// Helper to cause this dialog to be shown	
+	public void setVisible(boolean bShow) {
+		// If we are to be shown then...
+		if(bShow){
+			// If the date was not specified the default to the current date
+			if(m_calDate == null) { this.setDate(Calendar.getInstance().getTime()); }
+			
+			// Flag that nothing has been selected yet and then populate the controls with the proper days of the month
+			m_sSelectedDay = "";
+			displayDate();
+		} // End if(bShow)
+		
+		// Show/hide this dialog
+		m_dlgSelf.setVisible(bShow); 
+	}
+		
+	
+	// Helper to adjust the title for this control after the constructor has been called (re-use of the dialog)
+	public void setTitle(String sTitle) { m_dlgSelf.setTitle(sTitle); }
+	
+	
+	// Helper to adjust the date for this control after the constructor has been called (re-use of the dialog)  
+	public void setDate(Date dtDate) {
+		// Only do the following code if we have been passed a date (will be called by the constructor which may or may not have been passed a date object)
+		if(dtDate == null) { return; }
+		
+		// Create a Calendar object from the date object passed in (needed for manipulating dates)
+		m_calDate = Calendar.getInstance();
+		m_calDate.setTime(dtDate);
+		m_calDate.set(Calendar.HOUR, 0); // Zero out the Hour
+		m_calDate.set(Calendar.MINUTE, 0); // Zero out the Minute
+		m_calDate.set(Calendar.SECOND, 0); // Zero out the Second
+		m_calDate.set(Calendar.MILLISECOND, 0); // Zero out the Millisecond		
 	}
 	
 	
     // Adjust the controls to reflect the month's days
     public void displayDate() {
     	// Get a Calendar instance for the first day of the month we're to show   	
-        Calendar calFirstDayOfMonth = Calendar.getInstance();
-        calFirstDayOfMonth.set(m_iYear, m_iMonth, 1);
+        Calendar calFirstDayOfMonth = (Calendar)m_calDate.clone();
+        calFirstDayOfMonth.set(Calendar.DAY_OF_MONTH, 1);
         
         // Determine which day of the week the first day of the month lands on. Also get the number of days in the current month 
         int iFirstDayOfWeek = (calFirstDayOfMonth.get(Calendar.DAY_OF_WEEK) - 1); // -1 because iIndex is 0-based and this was 1-based
@@ -154,20 +194,18 @@ public class CDatePicker {
     
     // User clicked on the Previous month button
  	private void onClick_cmdPreviousMonth(){
- 		// Adjust the month index backwards. If we are currently at January, adjust the index to be December and decrement the Year index
- 		if(m_iMonth == 0) { m_iMonth = 11; m_iYear--; }
- 		else { m_iMonth--; }		
+ 		// Adjust the month index backwards
+ 		m_calDate.add(Calendar.MONTH, -1);
  		
  		// Display the new month's days
-         displayDate();	
+ 		displayDate();	
  	}
 
  	
  	// User clicked on the Next month button
  	private void onClick_cmdNextMonth() {
- 		// Adjust the month index forwards. If we are currently at December, adjust the index to be January and increment the Year index
- 		if(m_iMonth == 11) { m_iMonth = 0; m_iYear++; }
- 		else { m_iMonth++; }
+ 		// Adjust the month index forwards
+ 	 	m_calDate.add(Calendar.MONTH, +1);
  		
  		// Display the new month's days
  	    displayDate();
@@ -177,7 +215,10 @@ public class CDatePicker {
     // User clicked on one of the month's Day buttons
     private void onClick_cmdMonth(int iSelection) {
     	m_sSelectedDay = m_arrMonthDayButtons[iSelection].getActionCommand();
-    	m_dlgSelf.dispose();
+    	
+    	// Tell the caller that a selection was made and then hide this dialog
+    	if(m_alListener != null){ m_alListener.actionPerformed(new ActionEvent(this, 0, "Selection Made")); }	            	
+    	m_dlgSelf.setVisible(false);
     }
     
     
@@ -186,10 +227,8 @@ public class CDatePicker {
     	// If no date was selected, just return an empty string
 	    if (m_sSelectedDay.equals("")) { return null; }
 	    
-	    // Create a Calendar object for the current year, month, and selected day and then return the Date object to the caller (NOTE: If you do NOT specify the
-	    // Hour, Minute, Second to 0, it gets the current time which can really throw off date comparisons!)
-	    Calendar calSelectedDay = Calendar.getInstance();
-	    calSelectedDay.set(m_iYear, m_iMonth, Integer.parseInt(m_sSelectedDay), 0, 0, 0);
-	    return calSelectedDay.getTime();
+	    // Set the date object to the selected day of the month and then return the Date object to the caller
+	    m_calDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(m_sSelectedDay));
+	    return m_calDate.getTime();
     }
 }

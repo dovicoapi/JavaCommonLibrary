@@ -142,19 +142,7 @@ public class CTimeEntry {
 	}
 	
 	
-	//FUTURE methods:
-	// GETs for Project, Status, and Sheet filters - including date range versions
-		
-		
-	
-	//FUTURE methods: 
-	//	public static CTimeEntry Insert(CTimeEntry tTimeEntry)
-	//	public static ArrayList<CTimeEntry> Insert(ArrayList<CTimeEntry> lstTimeEntries)
 
-	//	public static CTimeEntry Update(CTimeEntry tTimeEntry)
-	//	public static ArrayList<CTimeEntry> Update(ArrayList<CTimeEntry> lstTimeEntries)
-	
-	
 	
 	// Handles the work of making a request and pulling Time Entries from the result of a request
 	//
@@ -255,6 +243,52 @@ public class CTimeEntry {
 		CRESTAPIHelper.makeAPIRequest(aRequestResult);
 		return (aRequestResult.getHadRequestError() ? false : true);
 	}
+	
+	
+	// sTimeEntryID - required. This is the ID of the item we're to update
+	// lProjectID (optional - pass in null if not to update)
+	// lTaskID (optional - pass null if not to update)
+	// lEmployeeID (optional - pass null if not to update)
+	// dtDate (optional - pass null if not to update. Otherwise needs to be in yyyy-MM-dd format)
+	// sStartTime (optional - pass null if not to update. Otherwise needs to be in HHMM format)
+	// sStopTime (optional - pass null if not to update. Otherwise needs to be in HHMM format)
+	//* dTotalHours (required)
+	// sDescription (optional - pass null if not to update)
+	//
+	//NOTE: Other fields exist like Billable, Integrate, etc
+	public static CTimeEntry doUpdate(String sTimeEntryID, Long lProjectID, Long lTaskID, Long lEmployeeID, Date dtDate, String sStartTime, String sStopTime, 
+			double dTotalHours, String sDescription, APIRequestResult aRequestResult) {
+		// Build up the XML for the request only adding in the elements if they have been specified (NOTE: Field order matters!)
+		String sXMLRequest = "<TimeEntry>";
+		if(lProjectID != null) { sXMLRequest += ("<ProjectID>" + lProjectID.toString() + "</ProjectID>"); }
+		if(lTaskID != null) { sXMLRequest += ("<TaskID>" + lTaskID.toString() + "</TaskID>"); }
+		if(lEmployeeID != null) { sXMLRequest += ("<EmployeeID>" + lEmployeeID.toString() + "</EmployeeID>"); }
+		if(dtDate != null) { 
+			// Create a Date formatter object that will turn a date into the XML Date Format string expected by the API and then add that date string to our XML
+			SimpleDateFormat fFormatter = new SimpleDateFormat(Constants.XML_DATE_FORMAT);
+			sXMLRequest += ("<Date>" + fFormatter.format(dtDate) + "</Date>"); 
+		} // End if(dtDate != null)
+		if(sStartTime != null) { sXMLRequest += ("<StartTime>" + CXMLHelper.fixXmlString(sStartTime) + "</StartTime>"); }
+		if(sStopTime != null) { sXMLRequest += ("<StopTime>" + CXMLHelper.fixXmlString(sStopTime) + "</StopTime>"); }
+		sXMLRequest += ("<TotalHours>" + Double.toString(dTotalHours) + "</TotalHours>"); // Not optional
+		if(sDescription != null) { sXMLRequest += ("<Description>" + CXMLHelper.fixXmlString(sDescription) + "</Description>"); } 
+		sXMLRequest += "</TimeEntry>";
+		
+		
+		// Set the URI needed to update the time entry, indicate that we wish to do a PUT (Update - by default this is set to GET), and then specify the PUT data 
+		aRequestResult.setRequestURI(("TimeEntries/" + sTimeEntryID + "/"), "");
+		aRequestResult.setRequestHttpMethod("PUT");
+		aRequestResult.setRequestPostPutXmlData(sXMLRequest);
+		
+		// Execute the request and get the list of time entries back. If we have a list then return the first item in the list (there should only be the one item)
+		ArrayList<CTimeEntry> lstTimeEntries = processRequest(aRequestResult); 
+		if(lstTimeEntries != null) { return lstTimeEntries.get(0); }
+		
+		// An error happened so just return null.
+		return null;		
+	}
+	
+	
 	
 	//---------------------------------------------------------------------
 	// End of the Static Methods use when interacting with the DOVICO Hosted API
