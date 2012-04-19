@@ -9,7 +9,10 @@ import com.dovico.commonlibrary.data.CEmployee;
 public class CPanel_Settings extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
+	private JLabel m_lblConsumerSecret = null;
 	private JTextField m_txtConsumerSecret = null;
+	
+	private JLabel m_lblDataAccessToken = null;
 	private JTextField m_txtDataAccessToken = null;
 	
 	// Part of the validation does an 'Employee/Me' call to verify the tokens and since we're making the call, we might as well grab the data if the application
@@ -18,19 +21,19 @@ public class CPanel_Settings extends JPanel {
 	private String m_sEmployeeFirstName = "";
 	private String m_sEmployeeLastName = "";
 	
-	private String m_sApiVersionTargeted = ""; 
-	
+	private String m_sApiVersionTargeted = "";
+		
 	
 	// Default constructor
 	public CPanel_Settings(){
 		// Using Absolute layout
 		setLayout(null);
-				
+		
 		// Consumer Secret controls:
-		JLabel lblConsumerSecret = new JLabel("Consumer Secret:");
-		lblConsumerSecret.setBounds(10, 11, 109, 14);		
-		lblConsumerSecret.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.add(lblConsumerSecret);
+		m_lblConsumerSecret = new JLabel("Consumer Secret:");
+		m_lblConsumerSecret.setBounds(10, 11, 109, 14);
+		m_lblConsumerSecret.setFont(new Font("Arial", Font.PLAIN, 11));
+		this.add(m_lblConsumerSecret);
 		
 		m_txtConsumerSecret = new JTextField();
 		m_txtConsumerSecret.setBounds(131, 8, 309, 20);		
@@ -38,12 +41,11 @@ public class CPanel_Settings extends JPanel {
 		m_txtConsumerSecret.setColumns(10);
 		this.add(m_txtConsumerSecret);
 		
-		
 		// Data Access Token controls:
-		JLabel lblDataAccessToken = new JLabel("Data Access Token:");
-		lblDataAccessToken.setBounds(10, 42, 109, 14);
-		lblDataAccessToken.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.add(lblDataAccessToken);
+		m_lblDataAccessToken = new JLabel("Data Access Token:");
+		m_lblDataAccessToken.setBounds(10, 42, 109, 14);
+		m_lblDataAccessToken.setFont(new Font("Arial", Font.PLAIN, 11));
+		this.add(m_lblDataAccessToken);
 		
 		m_txtDataAccessToken = new JTextField();
 		m_txtDataAccessToken.setBounds(131, 39, 309, 20);
@@ -119,24 +121,43 @@ public class CPanel_Settings extends JPanel {
 		// We made it to this point, everything is ok
 		return true;
 	}	
-	
-	
+		
 		
 	// Called to have the values placed into the controls and the member variables set properly
 	/// <history>
     /// <modified author="C. Gerard Gallant" date="2011-12-15" reason="Added the parameters lEmployeeID, sEmployeeFirstName, and sEmployeeLastName"/>
     /// <modified author="C. Gerard Gallant" date="2012-03-30" reason="Modified to accept the sApiVersionTargeted parameter"/>
-    /// </history>
+	/// <modified author="C. Gerard Gallant" date="2012-04-19" reason="Modified to call the overloaded function. Passes 'false' for the bHideConsumerSecretField parameter"/>
+	/// </history>
 	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, String sApiVersionTargeted, Long lEmployeeID, String sEmployeeFirstName, 
 			String sEmployeeLastName) {
+		// Call the overloaded function passing 'false' for the bHideConsumerSecretField field
+		this.setSettingsData(sConsumerSecret, sDataAccessToken, sApiVersionTargeted, lEmployeeID, sEmployeeFirstName, sEmployeeLastName, false);
+	}
+	
+	
+	// Overloaded method for setting the panel's values and also to indicate if the Consumer Secret fields should be displayed or not
+	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, String sApiVersionTargeted, Long lEmployeeID, String sEmployeeFirstName, 
+			String sEmployeeLastName, boolean bHideConsumerSecretField) {
 		m_txtConsumerSecret.setText(sConsumerSecret);
 		m_txtDataAccessToken.setText(sDataAccessToken);
 		m_sApiVersionTargeted = sApiVersionTargeted;
 		m_lEmployeeID = lEmployeeID; 
 		m_sEmployeeFirstName = sEmployeeFirstName;
 		m_sEmployeeLastName = sEmployeeLastName;
+		
+		// If we are to hide the Consumer Secret fields then... 
+		if(bHideConsumerSecretField) {
+			// Hide the Consumer Secret fields
+			m_lblConsumerSecret.setVisible(false);
+			m_txtConsumerSecret.setVisible(false);
+			
+			// Adjust the Y position of the Data Access Token controls to be where the Consumer Secret fields are
+			m_lblDataAccessToken.setBounds(10, 11, 109, 14); // y from 42 to 11
+			m_txtDataAccessToken.setBounds(131, 8, 309, 20); // y from 39 to 8
+		} // End if(bHideConsumerSecretField)
 	}
-
+	
 	
 	// Methods returning the setting values (should only be called if the call to validateSettingsData returns 'true')
 	public String getConsumerSecret() { return m_txtConsumerSecret.getText(); }
