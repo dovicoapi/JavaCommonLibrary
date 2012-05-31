@@ -50,4 +50,15 @@ public class CXMLHelper {
 		sReturnVal = sReturnVal.replace("<", "&lt;");
 		return sReturnVal.replace(">", "&gt;");
 	}
+	
+	
+	/// <history>
+	/// <modified author="C. Gerard Gallant" date="2012-05-31" reason="Created. I went too far with the encoding when I created the fixXmlString method above. I should not have been encoding the single and double quotes"/>
+	/// </history>
+	public static String encodeTextForElement(String sValue){
+		// Change all unsafe XML characters into their safe ones
+		String sReturnVal = sValue.replace("&", "&amp;");
+		sReturnVal = sReturnVal.replace("<", "&lt;");
+		return sReturnVal.replace(">", "&gt;");
+	}
 }
