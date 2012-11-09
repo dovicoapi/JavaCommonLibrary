@@ -1,6 +1,7 @@
 package com.dovico.commonlibrary;
 
 import java.awt.*;
+
 import javax.swing.*;
 
 import com.dovico.commonlibrary.data.CEmployee;
@@ -22,6 +23,11 @@ public class CPanel_Settings extends JPanel {
 	private String m_sEmployeeLastName = "";
 	
 	private String m_sApiVersionTargeted = "";
+	
+	private int m_iAccessTokenLine1Top = 84; // For apps that need to adjust where the Access Token label text is located call: adjustAccessTokenLabelVerticalPositions
+	private JLabel m_lblAccessTokenLine1 = null;
+	private JLabel m_lblAccessTokenLine2 = null;
+	private JLabel m_lblAccessTokenLine3 = null;
 		
 	
 	// Default constructor
@@ -52,7 +58,46 @@ public class CPanel_Settings extends JPanel {
 		m_txtDataAccessToken.setFont(new Font("Arial", Font.PLAIN, 11));
 		m_txtDataAccessToken.setColumns(10);
 		this.add(m_txtDataAccessToken);
+		
+		
+		/*----------------------
+		Section that tells the user where they can find the Data Access Token 
+		----------------------*/
+		m_lblAccessTokenLine1 = new JLabel("This App requires administrator API tokens from DOVICO Timesheet\u2122");
+		m_lblAccessTokenLine1.setHorizontalAlignment(SwingConstants.CENTER);
+		m_lblAccessTokenLine1.setFont(new Font("Arial", Font.PLAIN, 11));		
+		add(m_lblAccessTokenLine1);
+		
+		m_lblAccessTokenLine2 = new JLabel("via Database Options (Menu > Setup > Database Options > API)");
+		m_lblAccessTokenLine2.setHorizontalAlignment(SwingConstants.CENTER);
+		m_lblAccessTokenLine2.setFont(new Font("Arial", Font.PLAIN, 11));		
+		add(m_lblAccessTokenLine2);
+		
+		m_lblAccessTokenLine3 = new JLabel("");
+		m_lblAccessTokenLine3.setHorizontalAlignment(SwingConstants.CENTER);
+		m_lblAccessTokenLine3.setFont(new Font("Arial", Font.PLAIN, 11));		
+		add(m_lblAccessTokenLine3);
+		
+		// Position the Access Token labels
+		adjustAccessTokenLabelVerticalPositions(0);
 	}
+	
+	
+	/// <summary>
+    /// Helper that adjusts the vertical positions the Access token labels
+    /// </summary>
+    /// <param name="iVerticalAdjustment" type="int" ref="false" inout="[in]" description="Value that can be used to adjust the vertical positioning of the Access Token labels. Use a negative number to move them up, positive to move them down."/>
+    /// <returns>void</returns>
+	/// <history>
+    /// <modified author="C. Gerard Gallant" date="2012-11-09" reason="Created"/>
+    /// </history>
+	public void adjustAccessTokenLabelVerticalPositions(int iVerticalAdjustment)
+	{
+		m_lblAccessTokenLine1.setBounds(10, (m_iAccessTokenLine1Top + iVerticalAdjustment), 418, 14);
+		m_lblAccessTokenLine2.setBounds(10, ((m_iAccessTokenLine1Top + 17) + iVerticalAdjustment), 418, 14);
+		m_lblAccessTokenLine3.setBounds(10, ((m_iAccessTokenLine1Top + 34) + iVerticalAdjustment), 418, 14); // +34 is simply: m_iAccessTokenLine1Top + 17 + 17
+	}
+
 	
 	
 	// Helper that checks to see if all fields, on the Settings tab, have a value, etc
@@ -137,6 +182,9 @@ public class CPanel_Settings extends JPanel {
 	
 	
 	// Overloaded method for setting the panel's values and also to indicate if the Consumer Secret fields should be displayed or not
+	/// <history>
+	/// <modified author="C. Gerard Gallant" date="2012-11-09" reason="Code added for the Access Token labels to indicate to the user where to find the tokens"/>
+	/// </history>
 	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, String sApiVersionTargeted, Long lEmployeeID, String sEmployeeFirstName, 
 			String sEmployeeLastName, boolean bHideConsumerSecretField) {
 		m_txtConsumerSecret.setText(sConsumerSecret);
@@ -155,6 +203,15 @@ public class CPanel_Settings extends JPanel {
 			// Adjust the Y position of the Data Access Token controls to be where the Consumer Secret fields are
 			m_lblDataAccessToken.setBounds(10, 11, 109, 14); // y from 42 to 11
 			m_txtDataAccessToken.setBounds(131, 8, 309, 20); // y from 39 to 8
+			
+						
+			// We don't need to tell the user where to find the Admin tokens, we need to tell the user where to find the Data Access Token (we only need to adjust
+			// the text in lines 1 and 3 - line 2 is fine)
+			m_lblAccessTokenLine1.setText("This App requires a Data Access Token from DOVICO Timesheet\u2122");
+			m_lblAccessTokenLine3.setText("or via My Time & Expenses / Options (Menu > Views > My Time & Expenses > Options)");
+
+			// Let's also tweak the vertical position of the controls to place them a bit higher on the page since the Consumer Secret field is not present
+			adjustAccessTokenLabelVerticalPositions(-30);
 		} // End if(bHideConsumerSecretField)
 	}
 	
