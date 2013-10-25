@@ -82,7 +82,6 @@ public class CEmployee {
 		return null;
 	}
 	
-	
 	// Returns the first page of data if the Request URI is empty (not set). Otherwise, returns the page of employees indicated by the request URI that has been set. 
 	//
 	// If there was an error the return value will be null

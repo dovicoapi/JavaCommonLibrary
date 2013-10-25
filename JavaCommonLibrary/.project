@@ -3,6 +3,7 @@
 	<name>JavaCommonLibrary</name>
 	<comment></comment>
 	<projects>
+		<project>SubmitEmployeeTime</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
