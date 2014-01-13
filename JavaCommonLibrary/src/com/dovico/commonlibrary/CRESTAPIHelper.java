@@ -54,7 +54,11 @@ public class CRESTAPIHelper {
 	}
 	
 	
-	// Returns the result of a call (REST API v2 is currently XML-based so an XML Document object is returned by this function) 
+	
+	// Returns the result of a call (REST API v2 is currently XML-based so an XML Document object is returned by this function)
+	/// <history>
+	/// <modified author="C. Gerard Gallant" date="2014-01-13" reason="Support was informed of an import that wasn't working. After a bunch of digging, it turns out that there was an 'é' character for two of the names. The fix was fairly simple...Just added "UTF-8" as the 2nd parameter to the OutputStreamWriter constructor."/>
+	/// </history>
 	public static void makeAPIRequest(APIRequestResult aRequestResult) {
 		try {
 			// Build up the Request to the REST API
@@ -70,7 +74,7 @@ public class CRESTAPIHelper {
 				hConn.setDoOutput(true); // Needed if we want to send data
 			
 				// Write the data to the output stream 
-				OutputStreamWriter wrOutput = new OutputStreamWriter(hConn.getOutputStream());
+				OutputStreamWriter wrOutput = new OutputStreamWriter(hConn.getOutputStream(), "UTF-8");
 				wrOutput.write(aRequestResult.getRequestPostPutXmlData());
 				wrOutput.flush();
 				wrOutput.close();
@@ -86,7 +90,7 @@ public class CRESTAPIHelper {
 				// Get the XML Document object from the Error stream
 				Document xdDocResult = dbfFactory.newDocumentBuilder().parse(hConn.getErrorStream());
 				aRequestResult.setResultDocument(xdDocResult);
-				
+	
 				// Format the error message with the error description (an Error node is returned containing a Status and Description element - we don't need to
 				// parse the Status element since we already have it) 
 				aRequestResult.setRequestErrorMessage(String.format("Error %d\n%s", iResponseCode, CXMLHelper.getChildNodeValue(xdDocResult.getDocumentElement(), "Description")));
