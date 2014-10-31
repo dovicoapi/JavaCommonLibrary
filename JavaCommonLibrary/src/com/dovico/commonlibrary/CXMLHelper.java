@@ -35,6 +35,15 @@ public class CXMLHelper {
 		return sDefaultValue;
 	}
 	
+	public static Node getChildNode(Element xeElement, String sTagName) {
+		for (Node xnChild = xeElement.getFirstChild(); xnChild != null; xnChild = xnChild.getNextSibling()) {
+			if ((xnChild.getNodeType() == Node.ELEMENT_NODE) && (sTagName.equals(xnChild.getNodeName()))) {
+				return xnChild;
+			}
+		}
+
+		return null;
+	}
 	
 	// The following is only public temporarily until I can come up with an XML String Builder class
 	//
@@ -57,8 +66,8 @@ public class CXMLHelper {
 	/// </history>
 	public static String encodeTextForElement(String sValue){
 		// Change all unsafe XML characters into their safe ones
-		String sReturnVal = sValue.replace("&", "&amp;");
-		sReturnVal = sReturnVal.replace("<", "&lt;");
-		return sReturnVal.replace(">", "&gt;");
+		String sReturnVal = fixXmlString(sValue);
+		sReturnVal = sReturnVal.replace("\r\n", " ").replace("\r", "").replace("\n", "");
+		return sReturnVal;
 	}
 }

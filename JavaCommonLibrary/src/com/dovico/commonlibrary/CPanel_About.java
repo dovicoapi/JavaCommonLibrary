@@ -22,7 +22,7 @@ public class CPanel_About extends JPanel {
 	private static final String m_sContact2Value = "00 800 4618 8463";
 	private static final String m_sContact3Label = "E-mail:";
 	private static final String m_sContact3Value = "support@dovico.com";
-	private static final String m_sCopyrightInfo = "Copyright (C) 2012 DOVICO Software Inc. All rights reserved.";
+	private static final String m_sCopyrightInfo = "Copyright (C) 2014 DOVICO Software Inc. All rights reserved.";
 	
 	
 	// Default constructor. Simply call the 2 parameter overloaded constructor with default values 
