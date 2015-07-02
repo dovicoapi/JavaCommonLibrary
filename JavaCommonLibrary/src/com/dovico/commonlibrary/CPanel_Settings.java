@@ -139,7 +139,7 @@ public class CPanel_Settings extends JPanel {
         m_txtCompanyName.setPreferredSize(new java.awt.Dimension(309, 24));
 
         m_lblUserName.setFont(m_lblUserName.getFont());
-        m_lblUserName.setText("Username:");
+        m_lblUserName.setText("User Name:");
 
         m_txtUserName.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_txtUserName.setPreferredSize(new java.awt.Dimension(309, 24));
@@ -262,9 +262,9 @@ public class CPanel_Settings extends JPanel {
     /// </history>
 	public boolean validateSettingsData() {		
 		if (optCompany.isSelected()) {
-			if (!validateTextBoxHasValue(m_txtCompanyName, "Please enter a company name.")) { return false; }
-			if (!validateTextBoxHasValue(m_txtUserName, "Please enter a user name.")) { return false; }
-			if (!validateTextBoxHasValue(m_txtPassword, "Please enter a password.")) { return false; }
+			if (!validateTextBoxHasValue(m_txtCompanyName, "Please enter Company")) { return false; }
+			if (!validateTextBoxHasValue(m_txtUserName, "Please enter User Name")) { return false; }
+			if (!validateTextBoxHasValue(m_txtPassword, "Please enter Password")) { return false; }
 			
 			m_sCompanyName = m_txtCompanyName.getText();
 			m_sUserName = m_txtUserName.getText();
@@ -294,7 +294,7 @@ public class CPanel_Settings extends JPanel {
 			NodeList nlError = docResult.getElementsByTagName("Error");
 			if (nlError.getLength() > 0) 
 			{
-				JOptionPane.showMessageDialog(null, "Please check your company name, user name and password.", "Not authenticated", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Please check your Company, User Name and Password.", "Not authenticated", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			
