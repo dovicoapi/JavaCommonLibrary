@@ -1,10 +1,8 @@
 package com.dovico.commonlibrary;
 
-import java.awt.*;
 import java.awt.event.ItemEvent;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -27,14 +25,14 @@ public class CPanel_Settings extends JPanel {
     private javax.swing.JTextField m_txtCompanyName;
     private javax.swing.JTextField m_txtPassword;
     private javax.swing.JTextField m_txtUserName;
-    private javax.swing.JRadioButton rdioCompany;
-    private javax.swing.JRadioButton rdioToken;
+    private javax.swing.JRadioButton optCompany;
+    private javax.swing.JRadioButton optToken;
     private javax.swing.JPanel tokenPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     
-	// Part of the validation does an 'Employee/Me' call to verify the tokens and since we're making the call, we might as well grab the data if the application
-	// wishes to make use of it.
+	// Part of the validation does an 'Employee/Me' call to verify the tokens and since we're making the call, we might as well grab the
+    // data if the application wishes to make use of it.
 	private Long m_lEmployeeID = null;
 	private String m_sEmployeeFirstName = "";
 	private String m_sEmployeeLastName = "";
@@ -47,106 +45,20 @@ public class CPanel_Settings extends JPanel {
 	private String m_sConsumerSecret = "";
 	private String m_sDataToken = "";
 	
-/*	private int m_iAccessTokenLine1Top = 84; // For apps that need to adjust where the Access Token label text is located call: adjustAccessTokenLabelVerticalPositions
-	private JLabel m_lblAccessTokenLine1 = null;
-	private JLabel m_lblAccessTokenLine2 = null;
-	private JLabel m_lblAccessTokenLine3 = null;
-*/
+
 	// Default constructor
 	public CPanel_Settings(){
 		// Using Absolute layout
 		setLayout(null);
 
 		initComponents();
-		
-/*		btnGroupLogin = new ButtonGroup();
-		
-		m_lblCompanyName = new JLabel("Company:");
-		m_lblCompanyName.setBounds(10, 11, 109, 14);
-		m_lblCompanyName.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.add(m_lblCompanyName);
-		
-		m_txtCompanyName = new JTextField();
-		m_txtCompanyName.setBounds(131, 8, 309, 20);		
-		m_txtCompanyName.setFont(new Font("Arial", Font.PLAIN, 11));
-		m_txtCompanyName.setColumns(10);
-		this.add(m_txtCompanyName);
-		
-		m_lblUserName = new JLabel("User name:");
-		m_lblUserName.setBounds(10, 42, 109, 14);
-		m_lblUserName.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.add(m_lblUserName);
-		
-		m_txtUserName = new JTextField();
-		m_txtUserName.setBounds(131, 39, 309, 20);		
-		m_txtUserName.setFont(new Font("Arial", Font.PLAIN, 11));
-		m_txtUserName.setColumns(10);
-		this.add(m_txtUserName);
-		
-		m_lblPassword = new JLabel("Password:");
-		m_lblPassword.setBounds(10, 73, 109, 14);
-		m_lblPassword.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.add(m_lblPassword);
-		
-		m_txtPassword = new JPasswordField();
-		m_txtPassword.setBounds(131, 70, 309, 20);		
-		m_txtPassword.setFont(new Font("Arial", Font.PLAIN, 11));
-		m_txtPassword.setColumns(10);
-		this.add(m_txtPassword);
-		
-		
-		// Consumer Secret controls:
-		m_lblConsumerSecret = new JLabel("Consumer Secret:");
-		m_lblConsumerSecret.setBounds(10, 11, 109, 14);
-		m_lblConsumerSecret.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.add(m_lblConsumerSecret);
-		
-		m_txtConsumerSecret = new JTextField();
-		m_txtConsumerSecret.setBounds(131, 8, 309, 20);		
-		m_txtConsumerSecret.setFont(new Font("Arial", Font.PLAIN, 11));
-		m_txtConsumerSecret.setColumns(10);
-		this.add(m_txtConsumerSecret);
-		
-		// Data Access Token controls:
-		m_lblDataAccessToken = new JLabel("Data Access Token:");
-		m_lblDataAccessToken.setBounds(10, 42, 109, 14);
-		m_lblDataAccessToken.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.add(m_lblDataAccessToken);
-		
-		m_txtDataAccessToken = new JTextField();
-		m_txtDataAccessToken.setBounds(131, 39, 309, 20);
-		m_txtDataAccessToken.setFont(new Font("Arial", Font.PLAIN, 11));
-		m_txtDataAccessToken.setColumns(10);
-		this.add(m_txtDataAccessToken);
-		
-		
-		----------------------
-		Section that tells the user where they can find the Data Access Token 
-		----------------------
-		m_lblAccessTokenLine1 = new JLabel("This App requires administrator API tokens from DOVICO Timesheet\u2122");
-		m_lblAccessTokenLine1.setHorizontalAlignment(SwingConstants.CENTER);
-		m_lblAccessTokenLine1.setFont(new Font("Arial", Font.PLAIN, 11));		
-		add(m_lblAccessTokenLine1);
-		
-		m_lblAccessTokenLine2 = new JLabel("via Database Options (Menu > Setup > Database Options > API)");
-		m_lblAccessTokenLine2.setHorizontalAlignment(SwingConstants.CENTER);
-		m_lblAccessTokenLine2.setFont(new Font("Arial", Font.PLAIN, 11));		
-		add(m_lblAccessTokenLine2);
-		
-		m_lblAccessTokenLine3 = new JLabel("");
-		m_lblAccessTokenLine3.setHorizontalAlignment(SwingConstants.CENTER);
-		m_lblAccessTokenLine3.setFont(new Font("Arial", Font.PLAIN, 11));		
-		add(m_lblAccessTokenLine3);
-		
-		// Position the Access Token labels
-		adjustAccessTokenLabelVerticalPositions(0);
-*/	}
+	}
 	
 	
 	private void initComponents() {
         btnGroupLogin = new javax.swing.ButtonGroup();
-        rdioCompany = new javax.swing.JRadioButton();
-        rdioToken = new javax.swing.JRadioButton();
+        optCompany = new javax.swing.JRadioButton();
+        optToken = new javax.swing.JRadioButton();
         tokenPanel = new javax.swing.JPanel();
         m_lblAdminToken = new javax.swing.JLabel();
         m_txtAdminToken = new javax.swing.JTextField();
@@ -163,17 +75,17 @@ public class CPanel_Settings extends JPanel {
 
         setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
-        btnGroupLogin.add(rdioCompany);
-        rdioCompany.addItemListener(new java.awt.event.ItemListener() {
+        btnGroupLogin.add(optCompany);
+        optCompany.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rdioCompanyItemStateChanged(evt);
+                ItemStateChanged_optCompany(evt);
             }
         });
 
-        btnGroupLogin.add(rdioToken);
-        rdioToken.addItemListener(new java.awt.event.ItemListener() {
+        btnGroupLogin.add(optToken);
+        optToken.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rdioTokenItemStateChanged(evt);
+                ItemStateChanged_optToken(evt);
             }
         });
 
@@ -183,7 +95,7 @@ public class CPanel_Settings extends JPanel {
         m_lblAdminToken.setText("Data Access Token:");
 
         m_txtAdminToken.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        m_txtAdminToken.setPreferredSize(new java.awt.Dimension(309, 20));
+        m_txtAdminToken.setPreferredSize(new java.awt.Dimension(309, 24));
 
         jLabel1.setText("This Administrator token may be found by navigating within Dovico");
 
@@ -224,19 +136,19 @@ public class CPanel_Settings extends JPanel {
         m_lblCompanyName.setText("Company:");
 
         m_txtCompanyName.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        m_txtCompanyName.setPreferredSize(new java.awt.Dimension(309, 20));
+        m_txtCompanyName.setPreferredSize(new java.awt.Dimension(309, 24));
 
         m_lblUserName.setFont(m_lblUserName.getFont());
         m_lblUserName.setText("Username:");
 
         m_txtUserName.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        m_txtUserName.setPreferredSize(new java.awt.Dimension(309, 20));
+        m_txtUserName.setPreferredSize(new java.awt.Dimension(309, 24));
 
         m_lblPassword.setFont(m_lblPassword.getFont());
         m_lblPassword.setText("Password:");
 
         m_txtPassword.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        m_txtPassword.setPreferredSize(new java.awt.Dimension(309, 20));
+        m_txtPassword.setPreferredSize(new java.awt.Dimension(309, 24));
 
         javax.swing.GroupLayout companyPanelLayout = new javax.swing.GroupLayout(companyPanel);
         companyPanel.setLayout(companyPanelLayout);
@@ -286,11 +198,11 @@ public class CPanel_Settings extends JPanel {
                         .addComponent(m_lblInstructions)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rdioCompany)
+                        .addComponent(optCompany)
                         .addGap(18, 18, 18)
                         .addComponent(companyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rdioToken)
+                        .addComponent(optToken)
                         .addGap(18, 18, 18)
                         .addComponent(tokenPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -302,29 +214,26 @@ public class CPanel_Settings extends JPanel {
                 .addComponent(m_lblInstructions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rdioCompany)
+                    .addComponent(optCompany)
                     .addComponent(companyPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rdioToken)
+                    .addComponent(optToken)
                     .addComponent(tokenPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(62, Short.MAX_VALUE))
         );
     }// </editor-fold>
 
-    private void rdioCompanyItemStateChanged(java.awt.event.ItemEvent evt) {
-    	boolean enabled = evt.getStateChange() == ItemEvent.SELECTED;
-        setCompanyPanelState(enabled);
-    }
+	
+    private void ItemStateChanged_optCompany(ItemEvent evt) { setCompanyPanelState((evt.getStateChange() == ItemEvent.SELECTED)); }
 
-
-	protected void setCompanyPanelState(boolean enabled) {
-		companyPanel.setEnabled(enabled);
-        m_txtCompanyName.setEnabled(enabled);
-        m_txtPassword.setEnabled(enabled);
-        m_txtUserName.setEnabled(enabled);
+	protected void setCompanyPanelState(boolean bEnabled) {
+		companyPanel.setEnabled(bEnabled);
+        m_txtCompanyName.setEnabled(bEnabled);
+        m_txtPassword.setEnabled(bEnabled);
+        m_txtUserName.setEnabled(bEnabled);
         
-        if (!enabled) {
+        if (!bEnabled) {
         	m_txtCompanyName.setText(null);
         	m_txtPassword.setText(null);
         	m_txtUserName.setText(null);
@@ -334,50 +243,25 @@ public class CPanel_Settings extends JPanel {
 		}
 	}
 
-    private void rdioTokenItemStateChanged(java.awt.event.ItemEvent evt) {
-    	boolean enabled = evt.getStateChange() == ItemEvent.SELECTED;
-        setTokenPanelState(enabled);
-    }
+    private void ItemStateChanged_optToken(ItemEvent evt) { setTokenPanelState((evt.getStateChange() == ItemEvent.SELECTED)); }
 
-
-	protected void setTokenPanelState(boolean enabled) {
-		tokenPanel.setEnabled(enabled);
-        m_txtAdminToken.setEnabled(enabled);
+	protected void setTokenPanelState(boolean bEnabled) {
+		tokenPanel.setEnabled(bEnabled);
+        m_txtAdminToken.setEnabled(bEnabled);
         
-        if (!enabled) {
+        if (!bEnabled) {
         	m_txtAdminToken.setText(null);
         	m_sDataToken = "";
         }
 	}
 
-
-	/// <summary>
-    /// Helper that adjusts the vertical positions the Access token labels
-    /// </summary>
-    /// <param name="iVerticalAdjustment" type="int" ref="false" inout="[in]" description="Value that can be used to adjust the vertical positioning of the Access Token labels. Use a negative number to move them up, positive to move them down."/>
-    /// <returns>void</returns>
-	/// <history>
-    /// <modified author="C. Gerard Gallant" date="2012-11-09" reason="Created"/>
-    /// </history>
-	public void adjustAccessTokenLabelVerticalPositions(int iVerticalAdjustment)
-	{
-		//m_lblAccessTokenLine1.setBounds(10, (m_iAccessTokenLine1Top + iVerticalAdjustment), 418, 14);
-		//m_lblAccessTokenLine2.setBounds(10, ((m_iAccessTokenLine1Top + 17) + iVerticalAdjustment), 418, 14);
-		//m_lblAccessTokenLine3.setBounds(10, ((m_iAccessTokenLine1Top + 34) + iVerticalAdjustment), 418, 14); // +34 is simply: m_iAccessTokenLine1Top + 17 + 17
-	}
-
-	
 	
 	// Helper that checks to see if all fields, on the Settings tab, have a value, etc
 	/// <history>
     /// <modified author="C. Gerard Gallant" date="2011-12-15" reason="Added a call to the new queryEmployeeMeData function."/>
     /// </history>
 	public boolean validateSettingsData() {		
-		// Make sure that each text box has a value provided
-		//if(!validateTextBoxHasValue(m_txtConsumerSecret, "Please provide the Consumer Secret.")) { return false; }
-		//if(!validateTextBoxHasValue(m_txtDataAccessToken, "Please provide the Data Access Token.")) { return false; }
-		
-		if (rdioCompany.isSelected()) {
+		if (optCompany.isSelected()) {
 			if (!validateTextBoxHasValue(m_txtCompanyName, "Please enter a company name.")) { return false; }
 			if (!validateTextBoxHasValue(m_txtUserName, "Please enter a user name.")) { return false; }
 			if (!validateTextBoxHasValue(m_txtPassword, "Please enter a password.")) { return false; }
@@ -385,18 +269,14 @@ public class CPanel_Settings extends JPanel {
 			m_sCompanyName = m_txtCompanyName.getText();
 			m_sUserName = m_txtUserName.getText();
 		
-			// At this point we know that the both tokens have been provided but we don't know if they're valid. Let's call the API for the Employee/Me data to test
-			// the tokens and at the same time grab the logged in user's ID and Name
-			//if(!queryEmployeeMeData()) { return false; }
-			
+		
 			String sUserInfoXml = "<UserInfo><CompanyName>" + CXMLHelper.encodeTextForElement(m_sCompanyName) + "</CompanyName>";
 			sUserInfoXml += "<UserName>" + CXMLHelper.encodeTextForElement(m_sUserName) + "</UserName>";
 			sUserInfoXml += "<Password>" + CXMLHelper.encodeTextForElement(m_txtPassword.getText()) + "</Password></UserInfo>";
 			
-			APIRequestResult aRequestResult = new APIRequestResult( m_sConsumerSecret, "", m_sApiVersionTargeted, true);
-			
+			APIRequestResult aRequestResult = new APIRequestResult(m_sConsumerSecret, "", m_sApiVersionTargeted, true);
 			aRequestResult.setRequestHttpMethod("POST");
-			aRequestResult.setRequestURI(CRESTAPIHelper.buildURI("Authenticate/", "", "2"));
+			aRequestResult.setRequestURI(CRESTAPIHelper.buildURI("Authenticate/", "", m_sApiVersionTargeted));
 			aRequestResult.setRequestPostPutXmlData(sUserInfoXml);
 			
 			CRESTAPIHelper.makeAPIRequest(aRequestResult);
@@ -431,7 +311,7 @@ public class CPanel_Settings extends JPanel {
 			}
 		}
 		
-		if (rdioToken.isSelected()) {
+		if (optToken.isSelected()) {
 			if(!validateTextBoxHasValue(m_txtAdminToken, "Please provide the administrative Access Token.")) { return false; }
 			m_sDataToken = m_txtAdminToken.getText();
 		}
@@ -496,19 +376,8 @@ public class CPanel_Settings extends JPanel {
     /// <modified author="C. Gerard Gallant" date="2012-03-30" reason="Modified to accept the sApiVersionTargeted parameter"/>
 	/// <modified author="C. Gerard Gallant" date="2012-04-19" reason="Modified to call the overloaded function. Passes 'false' for the bHideConsumerSecretField parameter"/>
 	/// </history>
-	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, String sCompanyName, String sUserName, String sPassword, String sApiVersionTargeted, Long lEmployeeID, String sEmployeeFirstName, 
-			String sEmployeeLastName) {
-		// Call the overloaded function passing 'false' for the bHideConsumerSecretField field
-		this.setSettingsData(sConsumerSecret, sDataAccessToken, sCompanyName, sUserName, sPassword, sApiVersionTargeted, lEmployeeID, sEmployeeFirstName, sEmployeeLastName, false);
-	}
-	
-	
-	// Overloaded method for setting the panel's values and also to indicate if the Consumer Secret fields should be displayed or not
-	/// <history>
-	/// <modified author="C. Gerard Gallant" date="2012-11-09" reason="Code added for the Access Token labels to indicate to the user where to find the tokens"/>
-	/// </history>
-	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, String sCompanyName, String sUserName, String sPassword, String sApiVersionTargeted, Long lEmployeeID, String sEmployeeFirstName, 
-			String sEmployeeLastName, boolean bHideConsumerSecretField) {
+	public void setSettingsData(String sConsumerSecret, String sDataAccessToken, String sCompanyName, String sUserName, String sPassword, 
+			String sApiVersionTargeted, Long lEmployeeID, String sEmployeeFirstName, String sEmployeeLastName) {
 		
 		m_sConsumerSecret = sConsumerSecret;
 		
@@ -521,46 +390,24 @@ public class CPanel_Settings extends JPanel {
 			
 			m_sCompanyName = sCompanyName;
 			m_sUserName = sUserName;
-			rdioCompany.setSelected(true);
+			optCompany.setSelected(true);
 			setTokenPanelState(false);
 		} else {
 			setCompanyPanelState(false);
 			if (sDataAccessToken != null && !sDataAccessToken.isEmpty()) {
 				m_sDataToken = sDataAccessToken;
-				rdioToken.setSelected(true);
+				optToken.setSelected(true);
 				m_txtAdminToken.setText(sDataAccessToken);
 			} else {
 				setTokenPanelState(false);
-				rdioCompany.setSelected(true);
+				optCompany.setSelected(true);
 			}
 		}
 		
-		//m_txtConsumerSecret.setText(sConsumerSecret);
-		//m_txtDataAccessToken.setText(sDataAccessToken);
 		m_sApiVersionTargeted = sApiVersionTargeted;
 		m_lEmployeeID = lEmployeeID; 
 		m_sEmployeeFirstName = sEmployeeFirstName;
 		m_sEmployeeLastName = sEmployeeLastName;
-		
-		// If we are to hide the Consumer Secret fields then... 
-		if(bHideConsumerSecretField) {
-			// Hide the Consumer Secret fields
-			//m_lblConsumerSecret.setVisible(false);
-			//m_txtConsumerSecret.setVisible(false);
-			
-			// Adjust the Y position of the Data Access Token controls to be where the Consumer Secret fields are
-			//m_lblDataAccessToken.setBounds(10, 11, 109, 14); // y from 42 to 11
-			//m_txtDataAccessToken.setBounds(131, 8, 309, 20); // y from 39 to 8
-			
-						
-			// We don't need to tell the user where to find the Admin tokens, we need to tell the user where to find the Data Access Token (we only need to adjust
-			// the text in lines 1 and 3 - line 2 is fine)
-			//m_lblAccessTokenLine1.setText("This App requires a Data Access Token from DOVICO Timesheet\u2122");
-			//m_lblAccessTokenLine3.setText("or via My Time & Expenses / Options (Menu > Views > My Time & Expenses > Options)");
-
-			// Let's also tweak the vertical position of the controls to place them a bit higher on the page since the Consumer Secret field is not present
-			//adjustAccessTokenLabelVerticalPositions(-30);
-		} // End if(bHideConsumerSecretField)
 	}
 	
 	
