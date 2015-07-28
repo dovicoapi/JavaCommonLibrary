@@ -128,10 +128,14 @@ public class CAssignment {
 	// Returns the first page of data if the Request URI is empty (not set). Otherwise, returns the page of assignments indicated by the request URI that has been set.
 	//
 	// If there was an error the return value will be null
-	public static ArrayList<CAssignment> getList(Long lEmployeeID, APIRequestResult aRequestResult) {
-		// If the Request URI has not been set then set it to return the first page of assignments (the root. if it's already set we may have been called to get a
-		// next/previous page of assignments or child assignments)
-		if (aRequestResult.getRequestURI().isEmpty()) { aRequestResult.setRequestURI(("Assignments/Employee/" + lEmployeeID.toString() + "/"), ""); }
+	public static ArrayList<CAssignment> getList(Long lEmployeeID, boolean bIncludeForTimeEntryQueryString, APIRequestResult aRequestResult) {
+		// If the Request URI has not been set then set it to return the first page of assignments (the root. if it's already set we may 
+		// have been called to get a next/previous page of assignments or child assignments)
+		if (aRequestResult.getRequestURI().isEmpty()) { 
+			// If the ForTimeEntry query string was requested then include that in the query string. Otherwise, don't specify a query string
+			String sQueryString = (bIncludeForTimeEntryQueryString ? "ForTimeEntry=T" : "");
+			aRequestResult.setRequestURI(("Assignments/Employee/" + lEmployeeID.toString() + "/"), sQueryString); 
+		}
 		return processRequest(aRequestResult);
 	}
 	

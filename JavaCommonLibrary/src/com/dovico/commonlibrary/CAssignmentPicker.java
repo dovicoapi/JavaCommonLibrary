@@ -26,6 +26,7 @@ import com.dovico.commonlibrary.data.Constants;
 public class CAssignmentPicker {
 	JDialog m_dlgSelf = null;
 	private Long m_lEmployeeID = 0L;
+	private boolean m_bIncludeForTimeEntryQueryString = false;
 	private String m_sConsumerSecret = "";
 	private String m_sDataAccessToken = "";
 	private String m_sApiVersionTargeted = "";
@@ -148,13 +149,15 @@ public class CAssignmentPicker {
 	
 	// Causes the tree to load in a new employee's assignments (so that you can re-use a single class instance).
 	// If the employee is already set, will not reload.
-	public void loadAssignmentsForEmployee(Long lEmployeeID, String sConsumerSecret, String sDataAccessToken, String sApiVersionTargeted){
+	public void loadAssignmentsForEmployee(Long lEmployeeID, boolean bIncludeForTimeEntryQueryString, String sConsumerSecret, 
+			String sDataAccessToken, String sApiVersionTargeted){
 		// If the employee specified is the one we already have data loaded for then exit now (no sense in wasting processing by trying to load something we already
 		// have)		
 		if(m_lEmployeeID.equals(lEmployeeID)){ return; }
 		
 		// Remember the values passed in
 		m_lEmployeeID = lEmployeeID;
+		m_bIncludeForTimeEntryQueryString = bIncludeForTimeEntryQueryString; // a querystring flag that can be passed to a GET Assignments call to get all assignments for a user regardless of limited access settings so that it's possible to track time on any assignment that's assigned to you. This should only be set to 'True' when dealing with time entries belonging to the logged in user. 		
 		m_sConsumerSecret = sConsumerSecret;
 		m_sDataAccessToken = sDataAccessToken;
 		m_sApiVersionTargeted = sApiVersionTargeted;
@@ -177,7 +180,7 @@ public class CAssignmentPicker {
 	// Helper that loads in the branch of assignments for the parent node
 	private void getAssignments(DefaultMutableTreeNode tnParent, APIRequestResult aRequestResult) {
 		// Request the assignments
-		ArrayList<CAssignment> lstAssignments = CAssignment.getList(m_lEmployeeID, aRequestResult);
+		ArrayList<CAssignment> lstAssignments = CAssignment.getList(m_lEmployeeID, m_bIncludeForTimeEntryQueryString, aRequestResult);
 
 		// If we are loading children into a branch that holds the 'Processing...' text then remove the text before adding in our new items
 		if(doesBranchHaveProcessingChild(tnParent)) { tnParent.removeAllChildren(); } 
